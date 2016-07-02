@@ -1,2 +1,2 @@
 # cu-discordbot
-Discord bot for Camelot Unchained
+Discord chat bot for Camelot Unchained.

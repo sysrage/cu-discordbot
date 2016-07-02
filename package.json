@@ -1,0 +1,27 @@
+{
+  "name": "cu-discordbot",
+  "version": "0.1.0",
+  "description": "Discord Chat Bot For Camelot Unchained",
+  "license": "MPL-2.0",
+  "main": "src/index.js",
+  "author": "Brian Bothwell <sysrage@gmail.com>",
+  "private": true,
+  "keywords": [
+    "Camelot",
+    "Unchained",
+    "cu",
+    "cu-discordbot",
+    "discord",
+    "bot"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sysrage/cu-discordbot.git"
+  },
+  "config": {
+    "name": "cu-discordbot"
+  },
+  "dependencies": {
+    "discord.js": "^8.0.0"
+  }
+}
