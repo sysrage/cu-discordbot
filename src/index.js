@@ -4,7 +4,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-
 let sys         = require('sys');
 let util        = require('util');
 let path        = require('path');
@@ -16,6 +15,12 @@ let moment      = require('moment');
 let request     = require('request');
 let trelloAPI   = require('node-trello');
 let cuRestAPI   = require('./cu-rest.js');
+
+// load configuration file
+let config = require('../config.js');
+
+// load chat commands
+let chatCommands = require('./commands.js');
 
 // function to read in the saved member data
 function getMemberData() {
@@ -32,21 +37,6 @@ function getMemberData() {
       memberData = JSON.parse(data);
     }
   });
-}
-
-// function to get parameters from a message
-function getParams(command, message, index) {
-  re = new RegExp('^' + config.commandChar + command +'[\ ]*', 'i');
-  params = message.replace(re, '');
-  if (params.length > 0) {
-    if (index === undefined) {
-      return params;
-    } else {
-      return params.split(' ')[index];
-    }
-  } else {
-    return -1;
-  }
 }
 
 // function to authenticate with GitHub API
@@ -192,14 +182,12 @@ function githubAllIssues(filter) {
       var repoCount = repos.length;
       repos.forEach(function(repo) {
         githubAuth();
-        github.issues.repoIssues({
-          user: repo.owner.login,
-          repo: repo.name,
-          state: 'open'
+        github.search.issues({
+          q: 'user:' + repo.owner.login + '+repo:' + repo.name + '+state:open',
         }, function(err, res) {
           repoCount--;
           if (! err) {
-            allIssues = allIssues.concat(res);
+            allIssues = allIssues.concat(res.items);
           } else {
             util.log('[ERROR] Error pulling list of issues for \'' + repo.owner.login + '/' + repo.name + '\'.');
           }
@@ -283,7 +271,7 @@ function githubAllRepos(org) {
 
     orgsToSearch.forEach(function(ghUser, index, array) {
       githubAuth();
-      github.repos.getFromOrg({
+      github.repos.getForOrg({
         org: ghUser
       }, function(err, res) {
         orgCount--;
@@ -428,6 +416,32 @@ function sendAnnounce(announcement) {
     });
   }
 }
+
+function sendReply(Reply) {
+  if (Reply.type === 'discord') {
+    const message = Reply.message;
+    const replyText = Reply.text;
+    if (Reply.replyWithPM) {
+      discordBot.sendMessage(message.author, replyText);
+    } else {
+      discordBot.reply(message, replyText);
+    }
+  }
+
+  if (Reply.type === 'xmpp') {
+    const server = Reply.server;
+    const room = Reply.room;
+    const sender = Reply.sender;
+    const message = Reply.message;
+    if (room === 'pm') {
+      // sendPM(server, message, sender);
+    } else {
+      // sendChat(server, message, room);
+    }
+    console.log('coming soon(tm)');
+  }
+}
+
 
 // Timer to monitor GitHub and announce updates
 var timerGitHub = function() { return setInterval(function() { checkGitHub(); }, 15000); };
@@ -659,11 +673,42 @@ function startDiscordBot() {
     const messageAuthorName = message.author.username;
     const messageChannelName = message.channel.name;
     const messageContent = message.content;
+    let commandRoom = false;
+
+    // If message matches a defined command, run it
+    for (let i = 0; i < config.commandRooms.length; i++) {
+      if (config.commandRooms[i].type === 'discord' && config.commandRooms[i].name === messageChannelName) commandRoom = true;
+    }
+    if (messageContent[0] === config.commandChar && commandRoom) {
+      var userCommand = messageContent.split(' ')[0].split(config.commandChar)[1].toLowerCase();
+      chatCommands.forEach(function(cmd) {
+        if (userCommand === cmd.command.toLowerCase()) {
+          cmd.exec(messageContent, {
+            type: 'discord',
+            message: message,
+            sendReply: sendReply,
+            memberData: memberData,
+            githubAllContribs: githubAllContribs,
+            githubAllIssues: githubAllIssues,
+            githubAllPullRequests: githubAllPullRequests,
+            githubAllRepos: githubAllRepos,
+            trelloAllAssists: trelloAllAssists
+          });
+        }
+      });
+    }
+
+    // If message is a ping, play tennis
     if (messageChannelName === 'mod-squad') {
       if (messageContent === 'ping') {
-        discordBot.reply(message, 'Pong to you ' + messageAuthorName + ' in ' + messageChannelName);
+        sendReply({
+          type: 'discord',
+          message: message,
+          text: 'Pong to you ' + messageAuthorName + ' in ' + messageChannelName
+        });
       }
     }
+
   });
   discordBot.loginWithToken(config.discordAPIKey);
 }
@@ -675,7 +720,6 @@ function stopDiscordBot() {
 
 
 // ***** Initialization *****
-let config = require('../config.js');
 let memberData = [];
 getMemberData();
 
