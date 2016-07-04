@@ -78,7 +78,7 @@ function getGithubUser(user) {
       fulfill({});
     } else {
       githubAuth();
-      github.user.getFrom({
+      github.users.getForUser({
         user: user
       }, function(err, res) {
         if (! err) {
@@ -571,6 +571,9 @@ function checkGitHub() {
         }
         util.log('[STATUS] GitHub data file updated with new information.');
       });
+
+      discordBot.setChannelTopic(extras.message.channel, 'Open Pull Requests: xx | Open Issues: xx | Cards Needing Assistance: xx');
+
     }
   });
 }
@@ -666,6 +669,7 @@ function updateDiscordChannels() {
 function startDiscordBot() {
   discordBot.on('ready', function(error, message) {
     util.log('[STATUS] Discord chat bot is now online.');
+    discordBot.setPlayingGame('Camelot Unchained');
     discordBot.timerChanUpdate = setInterval(function() { updateDiscordChannels(); }, 500);
   });
 
@@ -673,7 +677,18 @@ function startDiscordBot() {
     const messageAuthorName = message.author.username;
     const messageChannelName = message.channel.name;
     const messageContent = message.content;
+    let messageAuthorAdmin = false;
     let commandRoom = false;
+
+
+    const messageAuthorRoles = message.server ? message.server.rolesOfUser(message.author) : [];
+    for (let i = 0; i < messageAuthorRoles.length; i++) {
+      if (messageAuthorRoles[i].name === 'CSE') {
+        messageAuthorAdmin = true;
+        break;
+      }
+    }
+    if (config.botAdmins.indexOf(messageAuthorName) > -1) messageAuthorAdmin = true;
 
     // If message matches a defined command, run it
     for (let i = 0; i < config.commandRooms.length; i++) {
@@ -686,36 +701,27 @@ function startDiscordBot() {
           cmd.exec(messageContent, {
             type: 'discord',
             message: message,
+            isAdmin: messageAuthorAdmin,
             sendReply: sendReply,
             memberData: memberData,
             githubAllContribs: githubAllContribs,
             githubAllIssues: githubAllIssues,
             githubAllPullRequests: githubAllPullRequests,
             githubAllRepos: githubAllRepos,
-            trelloAllAssists: trelloAllAssists
+            trelloAllAssists: trelloAllAssists,
+            getGithubUser: getGithubUser,
+            getTrelloUser: getTrelloUser
           });
         }
       });
     }
-
-    // If message is a ping, play tennis
-    if (messageChannelName === 'mod-squad') {
-      if (messageContent === 'ping') {
-        sendReply({
-          type: 'discord',
-          message: message,
-          text: 'Pong to you ' + messageAuthorName + ' in ' + messageChannelName
-        });
-      }
-    }
-
   });
   discordBot.loginWithToken(config.discordAPIKey);
 }
 
 function stopDiscordBot() {
   clearInterval(discordBot.timerChanUpdate);
-  //log out bot
+  discordBot.logout();
 }
 
 
