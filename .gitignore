@@ -13,3 +13,6 @@ npm-debug.log
 /dist
 **/*node_modules
 *.csproj
+github.data
+trello.data
+member.data
