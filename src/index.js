@@ -4,7 +4,6 @@
  * file, You can obtain one at http://mozilla.org/MPL/2.0/.
  */
 
-let sys         = require('sys');
 let util        = require('util');
 let path        = require('path');
 let fs          = require('fs');
