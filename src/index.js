@@ -690,6 +690,8 @@ function startDiscordBot() {
     }
     if (config.botAdmins.indexOf(messageAuthorName) > -1) messageAuthorAdmin = true;
 
+    // Always allow commands via PM.
+    if (typeof message.server === 'undefined') commandRoom = true;
     // If message matches a defined command, run it
     for (let i = 0; i < config.commandRooms.length; i++) {
       if (config.commandRooms[i].type === 'discord' && config.commandRooms[i].name === messageChannelName) commandRoom = true;
@@ -698,7 +700,7 @@ function startDiscordBot() {
       var userCommand = messageContent.split(' ')[0].split(config.commandChar)[1].toLowerCase();
       chatCommands.forEach(function(cmd) {
         if (userCommand === cmd.command.toLowerCase()) {
-          cmd.exec(messageContent, {
+          const extras = {
             type: 'discord',
             message: message,
             isAdmin: messageAuthorAdmin,
@@ -711,7 +713,8 @@ function startDiscordBot() {
             trelloAllAssists: trelloAllAssists,
             getGithubUser: getGithubUser,
             getTrelloUser: getTrelloUser
-          });
+          };
+          cmd.exec(messageContent, extras);
         }
       });
     }
