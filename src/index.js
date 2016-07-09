@@ -248,7 +248,7 @@ function githubAllPullRequests(filter) {
           if (! err) {
             allPullRequests = allPullRequests.concat(res);
           } else {
-            util.log('[ERROR] Error pulling list of pull requests for \'' + repo.owner.login + '/' + repo.name + '\'.');
+            util.log('[ERROR] Error pulling list of pull requests for \'' + repo.owner.login + '/' + repo.name + '\'.\n' + err);
           }
           if (repoCount === 0) fulfill(allPullRequests);
         });
@@ -646,6 +646,9 @@ function checkTrello() {
     }
 
     if (newActionData) {
+      console.log('trelloData');
+      console.dir(trelloData);
+      console.log('tempLastAction: ' + tempLastAction);
       trelloData.lastAction = tempLastAction;
       fs.writeFile(config.trelloFile, JSON.stringify(trelloData), function(err) {
         if (err) {
