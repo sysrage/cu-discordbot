@@ -62,8 +62,8 @@ module.exports = {
 
   // List of chat rooms to announce Trello updates
   trelloAnnounce: [
-    { type: 'discord', name: 'mod-squad' },
-    { type: 'xmpp', name: '_modsquad' }
+    // { type: 'discord', name: 'mod-squad' },
+    // { type: 'xmpp', name: '_modsquad' }
   ],
 
   // Member list saved data location
