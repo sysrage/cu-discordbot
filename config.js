@@ -53,7 +53,6 @@ module.exports = {
   // All Trello boards to monitor for lists
   trelloBoards: [
     '55ca43cc37365f65cac54e4d',   // Mod Squad Suggestions
-    '56eaca9c0090e92048055c39',   // Patcher Development
     '55c4e1d2503fa3e9d0542fb2',   // UI Development & CU Library Development
   ],
 
