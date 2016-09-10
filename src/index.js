@@ -682,6 +682,7 @@ function startDiscordBot() {
     let messageAuthorAdmin = false;
     let commandRoom = false;
 
+    console.log('**message received: ' + message);
 
     const messageAuthorRoles = message.server ? message.server.rolesOfUser(message.author) : [];
     for (let i = 0; i < messageAuthorRoles.length; i++) {
