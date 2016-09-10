@@ -422,8 +422,10 @@ function sendReply(Reply) {
     const replyText = Reply.text;
     if (Reply.replyWithPM) {
       discordBot.sendMessage(message.author, replyText);
+      console.log('sent PM');
     } else {
       discordBot.reply(message, replyText);
+      console.log('sent reply');
     }
   }
 
@@ -681,8 +683,6 @@ function startDiscordBot() {
     const messageContent = message.content;
     let messageAuthorAdmin = false;
     let commandRoom = false;
-
-    console.log('**message received: ' + message);
 
     const messageAuthorRoles = message.server ? message.server.rolesOfUser(message.author) : [];
     for (let i = 0; i < messageAuthorRoles.length; i++) {
