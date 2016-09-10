@@ -422,10 +422,8 @@ function sendReply(Reply) {
     const replyText = Reply.text;
     if (Reply.replyWithPM) {
       discordBot.sendMessage(message.author, replyText);
-      console.log('sent PM');
     } else {
       discordBot.reply(message, replyText);
-      console.log('sent reply');
     }
   }
 
