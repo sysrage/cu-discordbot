@@ -475,14 +475,14 @@ function checkGitHub() {
             if (event.payload.issue.created_at !== event.payload.issue.updated_at) {
               if (event.payload.action === 'closed') {
                 var chatMessage = 'An existing issue for \'' + event.repo.name + '\' has been closed by ' + event.actor.login + ':' +
-                '\n' + event.payload.issue.html_url;
+                '\n<' + event.payload.issue.html_url + '>';
               } else {
                 var chatMessage = 'An existing issue for \'' + event.repo.name + '\' has been updated by ' + event.actor.login + ':' +
-                '\n' + event.payload.issue.html_url;
+                '\n<' + event.payload.issue.html_url + '>';
               }
             } else {
               var chatMessage = 'A new issue for \'' + event.repo.name + '\' has been opened by ' + event.actor.login + ':' +
-              '\n' + event.payload.issue.html_url;
+              '\n<' + event.payload.issue.html_url + '>';
             }
             if (githubData.lastIssue !== '2007-10-01T00:00:00.000Z') {
               sendAnnounce({ type: 'github', message: chatMessage });
@@ -501,14 +501,14 @@ function checkGitHub() {
             if (event.payload.pull_request.created_at !== event.payload.pull_request.updated_at) {
               if (event.payload.action === 'closed') {
                 var chatMessage = 'An existing pull request for \'' + event.repo.name + '\' has been closed by ' + event.actor.login + ':' +
-                '\n' + event.payload.pull_request.html_url;
+                '\n<' + event.payload.pull_request.html_url + '>';
               } else {
                 var chatMessage = 'An existing pull request for \'' + event.repo.name + '\' has been updated by ' + event.actor.login + ':' +
-                '\n' + event.payload.pull_request.html_url;
+                '\n<' + event.payload.pull_request.html_url + '>';
               }
             } else {
               var chatMessage = 'A new pull request for \'' + event.repo.name + '\' has been opened by ' + event.actor.login + ':' +
-              '\n' + event.payload.pull_request.html_url;
+              '\n<' + event.payload.pull_request.html_url + '>';
             }
             if (githubData.lastPR !== '2007-10-01T00:00:00.000Z') {
               sendAnnounce({ type: 'github', message: chatMessage });
@@ -528,10 +528,10 @@ function checkGitHub() {
               // Announce new information to chat room
               if (event.payload.issue.created_at !== event.payload.issue.updated_at) {
                 var chatMessage = 'An existing pull request for \'' + event.repo.name + '\' has been commented on by ' + event.actor.login + ':' +
-                '\n' + event.payload.issue.html_url;
+                '\n<' + event.payload.issue.html_url + '>';
               } else {
                 var chatMessage = 'A new pull request for \'' + event.repo.name + '\' has been commented on by ' + event.actor.login + ':' +
-                '\n' + event.payload.issue.html_url;
+                '\n<' + event.payload.issue.html_url + '>';
               }
               if (githubData.lastPR !== '2007-10-01T00:00:00.000Z') {
                 sendAnnounce({ type: 'github', message: chatMessage });
@@ -548,10 +548,10 @@ function checkGitHub() {
               // Announce new information to chat room
               if (event.payload.issue.created_at !== event.payload.issue.updated_at) {
                 var chatMessage = 'An existing issue for \'' + event.repo.name + '\' has been commented on by ' + event.actor.login + ':' +
-                '\n' + event.payload.issue.html_url;
+                '\n<' + event.payload.issue.html_url + '>';
               } else {
                 var chatMessage = 'A new issue for \'' + event.repo.name + '\' has been commented on by ' + event.actor.login + ':' +
-                '\n' + event.payload.issue.html_url;
+                '\n<' + event.payload.issue.html_url + '>';
               }
               if (githubData.lastIssue !== '2007-10-01T00:00:00.000Z') {
                 sendAnnounce({ type: 'github', message: chatMessage });
@@ -602,17 +602,17 @@ function checkTrello() {
         switch(action.type) {
           case 'createCard':
             chatMessage = action.memberCreator.username + ' created the card \'' + action.data.card.name + '\' on the Trello board \'' + action.data.board.name + '\':' +
-              '\nhttps://trello.com/c/' + action.data.card.shortLink;
+              '\n<https://trello.com/c/' + action.data.card.shortLink + '>';
             break;
           case 'updateCard':
             if (action.data.listAfter && action.data.listBefore) {
               // Card was moved.
               chatMessage = action.memberCreator.username + ' moved the card \'' + action.data.card.name + '\' from \'' + action.data.listBefore.name + '\' to \'' + action.data.listAfter.name + '\' on the Trello board \'' + action.data.board.name + '\':' +
-                '\nhttps://trello.com/c/' + action.data.card.shortLink;
+                '\n<https://trello.com/c/' + action.data.card.shortLink + '>';
             } else {
               // Card was modified.
               // chatMessage = action.memberCreator.username + ' modified the card \'' + action.data.card.name + '\' on the Trello board \'' + action.data.board.name + '\':' +
-              //   '\nhttps://trello.com/c/' + action.data.card.shortLink;
+              //   '\n<https://trello.com/c/' + action.data.card.shortLink + '>';
             }
             break;
           case 'addChecklistToCard':
@@ -620,23 +620,23 @@ function checkTrello() {
           case 'addAttachmentToCard':
           case 'deleteAttachmentFromCard':
             chatMessage = action.memberCreator.username + ' modified the card \'' + action.data.card.name + '\' on the Trello board \'' + action.data.board.name + '\':' +
-              '\nhttps://trello.com/c/' + action.data.card.shortLink;
+              '\n<https://trello.com/c/' + action.data.card.shortLink + '>';
             break;
           case 'commentCard':
             chatMessage = action.memberCreator.username + ' commented on the card \'' + action.data.card.name + '\' on the Trello board \'' + action.data.board.name + '\':' +
-              '\nhttps://trello.com/c/' + action.data.card.shortLink;
+              '\n<https://trello.com/c/' + action.data.card.shortLink + '>';
             break;
           case 'addMemberToCard':
             chatMessage = action.member.username + ' was added to the card \'' + action.data.card.name + '\' on the Trello board \'' + action.data.board.name + '\':' +
-              '\nhttps://trello.com/c/' + action.data.card.shortLink;
+              '\n<https://trello.com/c/' + action.data.card.shortLink + '>';
             break;
           case 'removeMemberFromCard':
             chatMessage = action.member.username + ' was removed from the card \'' + action.data.card.name + '\' on the Trello board \'' + action.data.board.name + '\':' +
-              '\nhttps://trello.com/c/' + action.data.card.shortLink;
+              '\n<https://trello.com/c/' + action.data.card.shortLink + '>';
             break;
           case 'moveCardToBoard':
             chatMessage = action.memberCreator.username + ' moved the card \'' + action.data.card.name + '\' from the board \'' + action.data.boardSource.name + '\' to \'' + action.data.list.name + '\' on the Trello board \'' + action.data.board.name + '\':' +
-              '\nhttps://trello.com/c/' + action.data.card.shortLink;
+              '\n<https://trello.com/c/' + action.data.card.shortLink + '>';
             break;
         }
         if (trelloData.lastAction !== '2011-09-01T00:00:00.000Z' && chatMessage) {
