@@ -85,7 +85,7 @@ const chatCommands = [
   exec: function(message, extras) {
     const sendReply = extras.sendReply;
 
-    const replyText = "The bot is written in Node.js and is running on an OpenShift gear. Source code for the bot can be found here: https://github.com/CUModSquad/SquadBot" +
+    const replyText = "The bot is written in Node.js and is running on an OpenShift gear. Source code for the bot can be found here: <https://github.com/CUModSquad/SquadBot>" +
       "\n\nMuch thanks to the CU Mod Squad for their help.";
     sendReply({
       type: extras.type,
@@ -152,7 +152,7 @@ const chatCommands = [
       if (issues.length > 0) {
         if (! filter && issues.length > 5) {
           for (var i = 0; i < 5; i++) {
-            issueURLs += "\n   " + (i + 1) + ": " + issues[i].html_url;
+            issueURLs += "\n   " + (i + 1) + ": <" + issues[i].html_url + ">";
           }
           const replyText = "There are currently " + issues.length + " issues open against " + targetOrgText + ":" + issueURLs +
             "\n To display more than the first 5 issues, include a filter in your command.";
@@ -163,7 +163,7 @@ const chatCommands = [
           });
         } else {
           issues.forEach(function(issue, index) {
-            issueURLs += "\n   " + (index + 1) + ": " + issue.html_url;
+            issueURLs += "\n   " + (index + 1) + ": <" + issue.html_url + ">";
           });
           const replyText = "There are currently " + issues.length + " issues open against " + targetOrgText + ":" + issueURLs;
           sendReply({
@@ -212,7 +212,7 @@ const chatCommands = [
       if (prs.length > 0) {
         if (! filter && prs.length > 5) {
           for (var i = 0; i < 5; i++) {
-            pullURLs += "\n   " + (i + 1) + ": " + prs[i].html_url;
+            pullURLs += "\n   " + (i + 1) + ": <" + prs[i].html_url + ">";
           }
           const replyText =  "There are currently " + prs.length + " pull requests open against " + targetOrgText + ":" + pullURLs +
             "\n To display more than the first 5 pull requests, include a filter in your command.";
@@ -223,7 +223,7 @@ const chatCommands = [
           });
         } else {
           prs.forEach(function(pr, index) {
-            pullURLs += "\n   " + (index + 1) + ": " + pr.html_url;
+            pullURLs += "\n   " + (index + 1) + ": <" + pr.html_url + ">";
           });
           const replyText = "There are currently " + prs.length + " pull requests open against " + targetOrgText + ":" + pullURLs;
           sendReply({
@@ -288,7 +288,7 @@ const chatCommands = [
     githubAllRepos(targetOrg).then(function(repos) {
       if (repos.length > 0) {
         repos.forEach(function(repo, index) {
-          repoURLs += "\n   " + (index + 1) + ": " + repo.full_name + " - " + repo.html_url;
+          repoURLs += "\n   " + (index + 1) + ": " + repo.full_name + " - <" + repo.html_url + ">";
         });
         const replyText = "There are currently " + repos.length + " repositories within " + targetOrgText + ":" + repoURLs;
         sendReply({
