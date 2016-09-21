@@ -39,7 +39,7 @@ module.exports = {
 
   // List of chat rooms to announce GitHub updates
   githubAnnounce: [
-    { type: 'discord', name: 'mod-squad' },
+    // { type: 'discord', name: 'mod-squad' },
     { type: 'xmpp', name: '_modsquad' }
   ],
 
