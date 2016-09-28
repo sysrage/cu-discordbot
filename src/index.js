@@ -571,7 +571,7 @@ function checkGitHub() {
         util.log('[STATUS] GitHub data file updated with new information.');
       });
 
-      discordBot.setChannelTopic(extras.message.channel, 'Open Pull Requests: xx | Open Issues: xx | Cards Needing Assistance: xx');
+      // discordBot.setChannelTopic(extras.message.channel, 'Open Pull Requests: xx | Open Issues: xx | Cards Needing Assistance: xx');
 
     }
   });
@@ -646,9 +646,6 @@ function checkTrello() {
     }
 
     if (newActionData) {
-      console.log('trelloData');
-      console.dir(trelloData);
-      console.log('tempLastAction: ' + tempLastAction);
       trelloData.lastAction = tempLastAction;
       fs.writeFile(config.trelloFile, JSON.stringify(trelloData), function(err) {
         if (err) {
@@ -749,10 +746,10 @@ let github = new githubAPI({
 const githubTimer = timerGitHub();
 
 // Set up Trello monitoring
-let trelloData = {};
-let trello = new trelloAPI(config.trelloAPIKey);
-getTrelloData();
-const trelloTimer = timerTrello();
+// let trelloData = {};
+// let trello = new trelloAPI(config.trelloAPIKey);
+// getTrelloData();
+// const trelloTimer = timerTrello();
 
 // Set up Discord bot
 let discordBot = new Discord.Client({autoReconnect: true});
